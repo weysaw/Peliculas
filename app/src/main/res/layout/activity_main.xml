@@ -10,23 +10,59 @@
         android:id="@+id/registrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="198dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="32dp"
         android:onClick="registrar"
         android:text="@string/registrar"
         app:layout_constraintBottom_toTopOf="@+id/consultar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/consultar"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/consultar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/consultar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="324dp"
+        android:layout_marginBottom="32dp"
         android:onClick="consultar"
         android:text="@string/consultar"
+        app:layout_constraintBottom_toTopOf="@+id/buscarTitulo"
+        app:layout_constraintEnd_toEndOf="@+id/buscarTitulo"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="@+id/buscarTitulo" />
+
+    <Button
+        android:id="@+id/buscarTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:onClick="buscarPorTitulo"
+        android:text="@string/buscarTitulo"
+        app:layout_constraintBottom_toTopOf="@+id/buscarFavoritos"
+        app:layout_constraintEnd_toEndOf="@+id/buscarFavoritos"
+        app:layout_constraintStart_toStartOf="@+id/buscarFavoritos" />
+
+    <Button
+        android:id="@+id/eliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="216dp"
+        android:onClick="eliminarPorTitulo"
+        android:text="@string/eliminarPorTitulo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buscarFavoritos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:onClick="buscarFavoritos"
+        android:text="@string/buscarFavoritos"
+        app:layout_constraintBottom_toTopOf="@+id/eliminar"
+        app:layout_constraintEnd_toEndOf="@+id/eliminar"
+        app:layout_constraintStart_toStartOf="@+id/eliminar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

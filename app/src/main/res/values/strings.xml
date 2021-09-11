@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">Semana 4 Controles de entrada</string>
+    <string name="app_name">Peliculas</string>
     <string name="registrar">Registrar</string>
     <string name="consultar">Consultar</string>
     <string name="titulo">Registro de peliculas</string>
     <string name="Genero">Genero</string>
+    <string name="buscarTitulo">Buscar por titulo</string>
+    <string name="buscarFavoritos">Buscar por favoritos</string>
+    <string name="eliminarPorTitulo">Eliminar por titulo</string>
     <string-array name="genero_array">
         <item>Drama</item>
         <item>Suspenso</item>

@@ -11,7 +11,7 @@ android {
         enabled = true
     }
     defaultConfig {
-        applicationId "uabc.axel.ornelas.semana4controlesdeentrada"
+        applicationId "uabc.axel.ornelas.uabc.axel.ornelas.peliculas"
         minSdk 23
         targetSdk 30
         versionCode 1

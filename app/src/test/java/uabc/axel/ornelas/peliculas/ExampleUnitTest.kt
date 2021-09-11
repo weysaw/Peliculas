@@ -1,4 +1,4 @@
-package uabc.axel.ornelas.semana4controlesdeentrada
+package uabc.axel.ornelas.peliculas
 
 import org.junit.Test
 

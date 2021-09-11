@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Semana4Controlesdeentrada/app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Semana4Controlesdeentrada/app/src/main/res/layout/activity_registrar_pelicula.xml" value="0.32563405797101447" />
+        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Peliculas/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.403125" />
+        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Peliculas/app/src/main/res/drawable/ic_launcher_background.xml" value="0.403125" />
+        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Peliculas/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Peliculas/app/src/main/res/layout/activity_registrar_pelicula.xml" value="0.30978260869565216" />
+        <entry key="..\:/Directorios/Documentos/Android-Proyectos/Peliculas/app/src/main/res/menu/opciones_buscar.xml" value="0.38697916666666665" />
       </map>
     </option>
   </component>
