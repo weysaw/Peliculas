@@ -2,13 +2,10 @@ package uabc.axel.ornelas.peliculas
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -16,8 +13,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 /**
  *
@@ -25,7 +23,7 @@ import kotlin.collections.ArrayList
  *
  */
 class MainActivity(
-    var peliculas: ArrayList<Pelicula> = arrayListOf()
+    private var peliculas: ArrayList<Pelicula> = arrayListOf()
 ) : AppCompatActivity() {
     //Callback que se ejecuta cuando se acaba la activadad de registrar Pelicula
     private val resultado =
@@ -50,7 +48,8 @@ class MainActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //Dirección del archivo
+        val archivo = "android.resource://$packageName/drawable/"
         val convertidor = SimpleDateFormat("dd-MM-yyyy hh:mm")
         //Datos que se agregan para inicializar el arreglo
         peliculas.add(
@@ -59,9 +58,9 @@ class MainActivity(
                 "Comedia",
                 5.0f,
                 "Esta bien",
-                convertidor.parse("25-12-2005 12:00"),
+                convertidor.parse("25-12-2005 12:00").time,
                 2005,
-                BitmapFactory.decodeResource(resources, R.drawable.miku)
+                Uri.parse(archivo + R.drawable.miku)
             )
         )
         peliculas.add(
@@ -70,9 +69,9 @@ class MainActivity(
                 "Terror",
                 3.5f,
                 "Te pega",
-                convertidor.parse("12-05-2012 13:00"),
+                convertidor.parse("12-05-2012 13:00").time,
                 2011,
-                BitmapFactory.decodeResource(resources, R.drawable.manotazo)
+                Uri.parse(archivo + R.drawable.manotazo)
             )
         )
         peliculas.add(
@@ -81,9 +80,9 @@ class MainActivity(
                 "Acción",
                 2.0f,
                 "PATAS",
-                convertidor.parse("20-11-2008 14:00"),
+                convertidor.parse("20-11-2008 14:00").time,
                 2006,
-                BitmapFactory.decodeResource(resources, R.drawable.patas)
+                Uri.parse(archivo + R.drawable.patas)
             )
         )
         peliculas.add(
@@ -92,9 +91,9 @@ class MainActivity(
                 "Comedia",
                 4.6f,
                 "Esta perron",
-                convertidor.parse("30-12-2016 12:00"),
+                convertidor.parse("30-12-2016 12:00").time,
                 2016,
-                BitmapFactory.decodeResource(resources, R.drawable.rubia)
+                Uri.parse(archivo + R.drawable.rubia)
             )
         )
     }
@@ -131,9 +130,11 @@ class MainActivity(
      */
     fun consultar(view: View) {
         //Codigo para abrir la otra clase
-        println(peliculas)
         Toast.makeText(this, "La cantidad de registros es ${peliculas.size}", Toast.LENGTH_SHORT)
             .show()
+        val intent = Intent(applicationContext, MostrarPeliculas::class.java)
+        intent.putParcelableArrayListExtra("peliculas", peliculas)
+        startActivity(intent)
     }
 
     /**
@@ -143,8 +144,11 @@ class MainActivity(
         //Filtra los elementos que tengan 4.5f para arriba
         val favoritos = peliculas.filter {
             it.rating > 4.5f
-        }
-        println(favoritos)
+        } as ArrayList<Pelicula>
+
+        val intent = Intent(this, MostrarPeliculas::class.java)
+        intent.putExtra("peliculas", favoritos )
+        startActivity(intent)
     }
 
     /**
@@ -171,7 +175,7 @@ class MainActivity(
                 )
                 //Muesta la info de la peli si la encuentra
                 if (pelicula != null)
-                    toast.setText(pelicula?.toString())
+                    toast.setText(pelicula.toString())
                 toast.show()
             }
             .setNegativeButton("Cancelar") { dialog, _ ->
@@ -199,7 +203,8 @@ class MainActivity(
                     //Compara el titulo ignorando el tamaño
                     it.nombre.equals(tituloPeli, true)
                 }
-                val texto = if (borrado) "Pelicula eliminada con exito" else "Pelicula no encontrada"
+                val texto =
+                    if (borrado) "Pelicula eliminada con exito" else "Pelicula no encontrada"
                 Toast.makeText(this, texto, Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancelar") { dialog, _ ->
