@@ -1,40 +1,39 @@
 package uabc.axel.ornelas.peliculas
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.DatePicker
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.view.drawToBitmap
 import uabc.axel.ornelas.peliculas.databinding.ActivityRegistrarPeliculaBinding
 import java.lang.Exception
 import java.util.*
-import kotlin.math.min
 
 class RegistrarPelicula : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrarPeliculaBinding
+    private var imagen: Uri  = Uri.parse("android.resource://$packageName/drawable/" + R.drawable.ic_launcher_background)
 
     private val resultado = registerForActivityResult(ActivityResultContracts.GetContent()) {
+        //Coloca la dirección de la imagen
         binding.imagen.setImageURI(it)
+        imagen = it
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrarPeliculaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //Crea lista de generos
         ArrayAdapter.createFromResource(
             this,
             R.array.genero_array,
@@ -49,22 +48,23 @@ class RegistrarPelicula : AppCompatActivity() {
      * Registra los datos y se los devuelve como objeto a la clase principal
      */
     @RequiresApi(Build.VERSION_CODES.N)
-    fun registrar(view: View) {
+    fun registrar(v: View) {
         val intent = Intent()
         try {
+            //Obtiene todos los datos
             val nombre: String = binding.nombrePelicula.text.toString()
             val genero: String = binding.lista.selectedItem.toString()
             val rating: Float = binding.puntuacion.rating
             val comentario: String = binding.comentario.text.toString()
             val convertidor = SimpleDateFormat("dd/MM/yyyy hh:mm")
             val anio: Int = binding.anio.text.toString().toInt()
-            var imagen: Bitmap = binding.imagen.drawToBitmap()
-            val fecha: Date =
+            val fecha: Long =
                 convertidor.parse(
                     "${binding.fecha.text} ${binding.hora.text}"
-                )
+                ).time
+            //Manda los datos a un objeto de pelicula
             val pelicula = Pelicula(nombre, genero, rating, comentario, fecha, anio, imagen)
-
+            //Pone la pelicula en el intent y dice que to.do resultdo ok
             intent.putExtra("peliculas", pelicula)
             setResult(Activity.RESULT_OK, intent)
             finish()
@@ -90,9 +90,9 @@ class RegistrarPelicula : AppCompatActivity() {
     /**
      * Obtiene la fecha y la pone en el boton
      */
-    fun obtenerFecha(view: View) {
+    fun obtenerFecha(v: View) {
         val fechaActual = Calendar.getInstance()
-        
+
         DatePickerDialog(this, { _, año, mes, dia ->
             //Se agrega el 0 si es menor a 10 para que se cumpla el formato
             var mesCorregido = mes.toString()
