@@ -10,10 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Semana4ControlesDeEntrada">
         <activity
-            android:name="uabc.axel.ornelas.peliculas.RegistrarPelicula"
+            android:name=".InformacionPelicula"
             android:exported="true" />
         <activity
-            android:name="uabc.axel.ornelas.peliculas.MainActivity"
+            android:name=".MostrarPeliculas"
+            android:exported="true" />
+        <activity
+            android:name=".RegistrarPelicula"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
