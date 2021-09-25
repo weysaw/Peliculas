@@ -102,7 +102,7 @@ class MainActivity(
      * Se encarga de registrar la pelicula en el arreglo iniciando la otra actividad
      */
     fun registrar(view: View) {
-        val intent = Intent(this, RegistrarPelicula::class.java)
+        val intent = Intent(applicationContext, RegistrarPelicula::class.java)
         resultado.launch(intent)
     }
 
@@ -147,7 +147,7 @@ class MainActivity(
         } as ArrayList<Pelicula>
 
         val intent = Intent(this, MostrarPeliculas::class.java)
-        intent.putExtra("peliculas", favoritos )
+        intent.putExtra("peliculas", favoritos)
         startActivity(intent)
     }
 
@@ -168,15 +168,16 @@ class MainActivity(
                     //Compara el titulo ignorando el tamaño
                     it.nombre.equals(tituloPeli, true)
                 }
-                val toast = Toast.makeText(
-                    this,
-                    "No se ha encontrado el titulo de esa pelicula",
-                    Toast.LENGTH_SHORT
-                )
-                //Muesta la info de la peli si la encuentra
-                if (pelicula != null)
-                    toast.setText(pelicula.toString())
-                toast.show()
+                //Muestra la info de la peli si la encuentra
+                if (pelicula != null) {
+                    val intent = Intent(this, InformacionPelicula::class.java)
+                    intent.putExtra("pelicula", pelicula)
+                    startActivity(intent)
+                } else {
+                    val texto = "No se ha encontrado el titulo de esa pelicula"
+                    Toast.makeText(this, texto, Toast.LENGTH_SHORT).show()
+                }
+
             }
             .setNegativeButton("Cancelar") { dialog, _ ->
                 dialog.dismiss()
