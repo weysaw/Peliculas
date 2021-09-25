@@ -21,9 +21,9 @@ import java.util.*
 class RegistrarPelicula : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistrarPeliculaBinding
-    private var imagen: Uri  = Uri.parse("android.resource://$packageName/drawable/" + R.drawable.ic_launcher_background)
+    private lateinit var imagen: Uri
 
-    private val resultado = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    private val resultado = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         //Coloca la dirección de la imagen
         binding.imagen.setImageURI(it)
         imagen = it
@@ -31,6 +31,8 @@ class RegistrarPelicula : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        imagen =
+            Uri.parse("android.resource://$packageName/drawable/" + R.drawable.ic_launcher_background)
         binding = ActivityRegistrarPeliculaBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //Crea lista de generos
@@ -62,6 +64,9 @@ class RegistrarPelicula : AppCompatActivity() {
                 convertidor.parse(
                     "${binding.fecha.text} ${binding.hora.text}"
                 ).time
+            //Garantiza que se pueda abrir la imagen en otra actividad
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            applicationContext.contentResolver.takePersistableUriPermission(imagen, takeFlags)
             //Manda los datos a un objeto de pelicula
             val pelicula = Pelicula(nombre, genero, rating, comentario, fecha, anio, imagen)
             //Pone la pelicula en el intent y dice que to.do resultdo ok
@@ -81,7 +86,7 @@ class RegistrarPelicula : AppCompatActivity() {
      */
     fun cambiarImagen(view: View) {
         try {
-            resultado.launch("image/*")
+            resultado.launch(arrayOf("image/*"))
         } catch (e: Exception) {
             Toast.makeText(this, "Error en la dirección de la imagen", Toast.LENGTH_SHORT).show()
         }
@@ -93,18 +98,22 @@ class RegistrarPelicula : AppCompatActivity() {
     fun obtenerFecha(v: View) {
         val fechaActual = Calendar.getInstance()
 
-        DatePickerDialog(this, { _, año, mes, dia ->
-            //Se agrega el 0 si es menor a 10 para que se cumpla el formato
-            var mesCorregido = mes.toString()
-            var diaCorregido = dia.toString()
-            if (mes < 10)
-                mesCorregido = "0$mesCorregido"
-            if (dia < 10)
-                diaCorregido = "0$diaCorregido"
+        DatePickerDialog(this,
+            { _, año, mes, dia ->
+                //Se agrega el 0 si es menor a 10 para que se cumpla el formato
+                var mesCorregido = mes.toString()
+                var diaCorregido = dia.toString()
+                if (mes < 10)
+                    mesCorregido = "0$mesCorregido"
+                if (dia < 10)
+                    diaCorregido = "0$diaCorregido"
 
-            val texto = "$diaCorregido/$mesCorregido/$año"
-            binding.fecha.text = texto
-        }, fechaActual.get(Calendar.YEAR), fechaActual.get(Calendar.MONTH), fechaActual.get(Calendar.DAY_OF_MONTH)).show()
+                val texto = "$diaCorregido/$mesCorregido/$año"
+                binding.fecha.text = texto
+            },
+            fechaActual.get(Calendar.YEAR),
+            fechaActual.get(Calendar.MONTH),
+            fechaActual.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     /**
