@@ -38,10 +38,6 @@ class AdaptadorRecycler(private val localDataSet: ArrayList<Pelicula>) : Recycle
         return localDataSet.size
     }
 
-    /*@JvmName("setOnClickListener1")
-    fun setOnClickListener(onClickListener: View.OnClickListener) {
-        this.onClickListener = onClickListener
-    }*/
     /**
      * Clase interna para localizar los datos que se necesitan para colocar la info
      */

@@ -1,8 +1,7 @@
 package uabc.axel.ornelas.peliculas
 
-import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
@@ -14,8 +13,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import uabc.axel.ornelas.peliculas.databinding.ActivityRegistrarPeliculaBinding
 import java.lang.Exception
+import java.net.URLEncoder
 import java.util.*
 
 class RegistrarPelicula : AppCompatActivity() {
@@ -51,8 +53,8 @@ class RegistrarPelicula : AppCompatActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.N)
     fun registrar(v: View) {
-        val intent = Intent()
         try {
+            val intent = Intent()
             //Obtiene todos los datos
             val nombre: String = binding.nombrePelicula.text.toString()
             val genero: String = binding.lista.selectedItem.toString()
@@ -69,6 +71,16 @@ class RegistrarPelicula : AppCompatActivity() {
             applicationContext.contentResolver.takePersistableUriPermission(imagen, takeFlags)
             //Manda los datos a un objeto de pelicula
             val pelicula = Pelicula(nombre, genero, rating, comentario, fecha, anio, imagen)
+            if (rating < 2) {
+                val titulo = "$nombre con rating menor a 2"
+                val texto = "Fue una perdida de tiempo :("
+                mostrarNotificacion(titulo, texto, false, "")
+            } else if (rating >= 4) {
+                val titulo = "$nombre con rating mayor o igual 4.5"
+                val texto = "Presiona para ver su trailer en el buscador"
+                mostrarNotificacion(titulo, texto, true, "$nombre trailer")
+            }
+
             //Pone la pelicula en el intent y dice que to.do resultdo ok
             intent.putExtra("peliculas", pelicula)
             setResult(Activity.RESULT_OK, intent)
@@ -78,6 +90,49 @@ class RegistrarPelicula : AppCompatActivity() {
                 this,
                 "Ingrese los datos correctamente", Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    /**
+     * Se muestra la notificación en la pantalla del dispositivo conteniendo info relevante de la peli
+     *
+     * https://developer.android.com/training/notify-user/build-notification?hl=es-419
+     * https://stackoverflow.com/questions/4800575/start-google-search-query-from-activity-android
+     */
+    private fun mostrarNotificacion(titulo: String,contenido: String, enlace: Boolean, url: String) {
+        //Es el id del canal
+        val canalID = "PeliculasId"
+        //Verifica la versión del sdk
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Es el nombre del canal
+            val nombreCanal = "Notificacion"
+            val descriptionText = "Este va a hacer la notificacion"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(canalID, nombreCanal, importance).apply {
+                description = descriptionText
+            }
+            // Registra el canal al sistema
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+        // Se crea la notificacion y se establecen los parametros
+        val notificacion = NotificationCompat.Builder(applicationContext, canalID)
+            .setSmallIcon(R.drawable.interrogacion_miku)
+            .setContentTitle(titulo)
+            .setContentText(contenido)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+        if (enlace) {
+            val intent = Intent(Intent.ACTION_WEB_SEARCH)
+            intent.putExtra(SearchManager.QUERY, url)
+            val requestID = 1
+            val pendingIntent = PendingIntent.getActivity(applicationContext, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            notificacion.contentIntent = pendingIntent
+        }
+        with(NotificationManagerCompat.from(applicationContext)) {
+            notify(1, notificacion)
         }
     }
 

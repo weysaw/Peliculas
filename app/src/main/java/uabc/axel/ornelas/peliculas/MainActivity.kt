@@ -8,9 +8,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +24,7 @@ import java.util.*
  *
  */
 class MainActivity(
-    private var peliculas: ArrayList<Pelicula> = arrayListOf()
+    private var peliculas: ArrayList<Pelicula> = arrayListOf(),
 ) : AppCompatActivity() {
     //Callback que se ejecuta cuando se acaba la activadad de registrar Pelicula
     private val resultado =
@@ -139,6 +140,8 @@ class MainActivity(
 
     /**
      * Busca las peliculas mayores a 4.5 y los muestra
+     *
+     * https://itnext.io/android-11-toast-updates-7f1cd2245bc4
      */
     fun buscarFavoritos(v: View) {
         //Filtra los elementos que tengan 4.5f para arriba
@@ -146,7 +149,45 @@ class MainActivity(
             it.rating > 4.5f
         } as ArrayList<Pelicula>
 
-        val intent = Intent(this, MostrarPeliculas::class.java)
+        var texto = ""
+        favoritos.forEach {
+            texto += "Nombre Pelicula: ${it.nombre} Rating: ${it.rating}\n"
+        }
+        val toast = Toast(applicationContext)
+        //Se obtiene el layout a mostrar
+        val tableLayout = LayoutInflater.from(applicationContext)
+            .inflate(R.layout.custom_toast, findViewById(R.id.raiz)) as TableLayout
+        //Agrega por cada fila el dato de la pelicula
+        favoritos.forEach { favorito ->
+            val nuevaFila = TableRow(applicationContext)
+            val parametrosLayout = TableRow.LayoutParams(200,
+                400)
+            parametrosLayout.weight = 1f
+            nuevaFila.layoutParams = parametrosLayout
+            val imagen = ImageView(applicationContext)
+            imagen.layoutParams = parametrosLayout
+            imagen.setImageURI(favorito.imagen)
+            nuevaFila.addView(imagen)
+            val nombre = TextView(applicationContext)
+            nombre.layoutParams = parametrosLayout
+            nombre.text = favorito.nombre
+            nombre.gravity = Gravity.CENTER
+            nuevaFila.addView(nombre)
+            val rating = TextView(applicationContext)
+            rating.layoutParams = parametrosLayout
+            rating.text = favorito.rating.toString()
+            rating.gravity = Gravity.CENTER
+            nuevaFila.addView(rating)
+            tableLayout.addView(nuevaFila)
+        }
+        //Agrega a la vista del toast
+        toast.setView(tableLayout)
+        toast.duration = Toast.LENGTH_SHORT
+        //Le establece la posición
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0)
+        toast.show()
+
+        val intent = Intent(applicationContext, MostrarPeliculas::class.java)
         intent.putExtra("peliculas", favoritos)
         startActivity(intent)
     }
