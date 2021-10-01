@@ -13,8 +13,6 @@ import uabc.axel.ornelas.peliculas.databinding.ActivityMostrarPeliculasBinding
 class MostrarPeliculas : AppCompatActivity() {
 
     private lateinit var binding: ActivityMostrarPeliculasBinding
-    // true = vista lineal, false = vista cuadrada
-    private var vista = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +27,6 @@ class MostrarPeliculas : AppCompatActivity() {
         val adapter = AdaptadorRecycler(pelis)
         // Se colocan las peliculas en el adaptador
         binding.peliculasRecycler.adapter = adapter
-
-        /* adapter.setOnClickListener { v ->
-             val pos: Int = binding.peliculasRecycler.getChildAdapterPosition(v)
-             Toast.makeText(this, "Se selecciona el $pos", Toast.LENGTH_SHORT).show()
-         }*/
         //Acción que se realiza cuando se presiona una pelicula
         adapter.onClickListener = View.OnClickListener { v ->
             val pos: Int = binding.peliculasRecycler.getChildAdapterPosition(v)
